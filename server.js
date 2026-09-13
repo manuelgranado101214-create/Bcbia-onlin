@@ -157,11 +157,10 @@ app.get("/sms", (req, res) => {
 // ============================================
 // INICIAR SERVIDOR
 // ============================================
-app.listen(PORT, () => {
-  console.log(`\n🚀 Servidor SMS corriendo en http://localhost:${PORT}`);
-  console.log(`📱 Página de envío: http://localhost:${PORT}/sms.html`);
-  console.log(`🔗 Ruta alternativa: http://localhost:${PORT}/sms`);
-  console.log(`\n📋 Estado: http://localhost:${PORT}/api/status\n`);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Servidor corriendo en el puerto ${port}`);
+});
 
   if (TWILIO_ACCOUNT_SID === "TU_ACCOUNT_SID_AQUI") {
     console.log("⚠️  Twilio NO está configurado.");
