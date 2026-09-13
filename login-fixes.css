@@ -1,0 +1,10 @@
+/* Mantiene el label arriba cuando el input tiene valor (sin depender de Angular) */
+#username:not(:placeholder-shown) ~ label,
+#password:not(:placeholder-shown) ~ label,
+#username.bc-active ~ label,
+#password.bc-active ~ label {
+  top: -23px;
+  padding-left: 0;
+  width: 95%;
+  font-size: 0.875rem;
+}

